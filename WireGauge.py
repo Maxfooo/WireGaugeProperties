@@ -5,23 +5,29 @@ Created on Oct 28, 2014
 '''
 
 import re
-
-f = open('awg.csv', 'r')
-awg = []
-for line in f:
-    awg.append(line.split(','))
-
-
-f.close
-print(awg)
 from tkinter import *
+from tkinter import filedialog
+import tkinter.messagebox as mb
+
+
 
 
 class WireGauge(Frame):
+
+    file_opt = options = {}
+    options['defaultextension'] = '.csv'
+    options['filetypes'] = [('all files', '.*'), ('csv files', '.csv')]
+    options['initialdir'] = 'C:\\'
+    options['initialfile'] = 'awg.csv'
+    options['title'] = 'Import AWG file'
+
     def __init__(self, master=None):
         Frame.__init__(self, master)
         master.title('Wire Gauge Info')
         self.pack()
+
+
+        self.openAWGFile()
 
         self.initGUI()
 
@@ -31,8 +37,8 @@ class WireGauge(Frame):
 
         self.gg = Listbox(g)
 
-        for i in range(len(awg[0])):
-            self.gg.insert(i, awg[0][i])
+        for i in range(len(self.awg[0])):
+            self.gg.insert(i, self.awg[0][i])
 
         sb = Scrollbar(g)
         sb.pack(side='left', fill=Y)
@@ -107,14 +113,29 @@ class WireGauge(Frame):
         sel = re.findall(r'\(([\d]+),\)', str(sel))[0]
         ind = int(sel)
 
-        self.di.set(awg[1][ind])
-        self.dmm.set(awg[2][ind])
-        self.rft.set(awg[3][ind])
-        self.rkm.set(awg[4][ind])
-        self.ac.set(awg[5][ind])
-        self.ap.set(awg[6][ind])
-        self.mf.set(awg[7][ind])
-        self.bf.set(awg[8][ind])
+        self.di.set(self.awg[1][ind])
+        self.dmm.set(self.awg[2][ind])
+        self.rft.set(self.awg[3][ind])
+        self.rkm.set(self.awg[4][ind])
+        self.ac.set(self.awg[5][ind])
+        self.ap.set(self.awg[6][ind])
+        self.mf.set(self.awg[7][ind])
+        self.bf.set(self.awg[8][ind])
+
+    def openAWGFile(self):
+        try:
+            f = open('awg.csv', 'r')
+            self.awg = []
+            for line in f:
+                self.awg.append(line.split(','))
+            f.close
+        except:
+            mb.showinfo("File not in directory", "Please Import awg.csv file")
+            f = filedialog.askopenfile(mode='r', **self.file_opt)
+            self.awg = []
+            for line in f:
+                self.awg.append(line.split(','))
+            f.close
 
 root = Tk()
 app = WireGauge(master=root)

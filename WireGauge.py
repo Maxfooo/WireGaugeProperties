@@ -104,15 +104,8 @@ class WireGauge(Frame):
 
     def updateFields(self, event):
         sel = self.gg.curselection()
-        print(sel)
         sel = re.findall(r'\(([\d]+),\)', str(sel))[0]
-        print(sel)
         ind = int(sel)
-        '''
-        for i in range(len(awg[0])):
-            if sel == awg[0][i]:
-                ind = i;
-        '''
 
         self.di.set(awg[1][ind])
         self.dmm.set(awg[2][ind])
